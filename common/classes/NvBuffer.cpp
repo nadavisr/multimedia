@@ -64,7 +64,7 @@ NvBuffer::NvBuffer(enum v4l2_buf_type buf_type, enum v4l2_memory memory_type,
 }
 
 NvBuffer::NvBuffer(uint32_t pixfmt, uint32_t width, uint32_t height,
-        uint32_t index, char* ext_buffer, uint32_t ext_buff_len)
+        uint32_t index, unsigned char* ext_buffer, uint32_t ext_buff_len)
         :buf_type(V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE),
          memory_type(V4L2_MEMORY_USERPTR),
          index(index)
@@ -241,12 +241,12 @@ NvBuffer::allocateMemory()
 
         if(ext_buffer_len < req_len)
         {
-
             CAT_ERROR_MSG("External buffer size " << ext_buffer_len << " is less then required size " << req_len);
             return 0;
         }
     }
 
+    uint32_t offset = 0;
     for (j = 0; j < n_planes; j++)
     {
         if (planes[j].data)
@@ -256,11 +256,19 @@ NvBuffer::allocateMemory()
             return -1;
         }
 
-        planes[j].length = MAX(planes[j].fmt.sizeimage,
-                               planes[j].fmt.width *
-                               planes[j].fmt.bytesperpixel *
-                               planes[j].fmt.height);
-        planes[j].data = new unsigned char [planes[j].length];
+        if(ext_buffer != NULL)
+        {
+            planes[j].data = ext_buffer + offset;
+        }
+        else
+        {
+            planes[j].length = MAX(planes[j].fmt.sizeimage,
+                                   planes[j].fmt.width *
+                                   planes[j].fmt.bytesperpixel *
+                                   planes[j].fmt.height);
+
+            planes[j].data = new unsigned char[planes[j].length];
+        }
 
         if (planes[j].data == MAP_FAILED)
         {

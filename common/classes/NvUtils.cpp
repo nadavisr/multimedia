@@ -56,6 +56,30 @@ read_video_frame(std::ifstream * stream, NvBuffer & buffer)
     return 0;
 }
 
+//read file to buffer
+int
+read_file(std::ifstream *stream, char *buffer, uint32_t buffer_len) {
+    if(buffer==NULL || stream == NULL)
+    {
+        return -1;
+    }
+    stream->seekg(0, stream->end);
+    uint32_t file_len = stream->tellg();
+    stream->seekg(0, stream->beg);
+
+    if(buffer_len < file_len)
+    {
+        return -1;
+    }
+
+    stream->read(buffer, file_len);
+    if (stream->gcount() < file_len)
+        return -1;
+
+
+    return 0;
+}
+
 int
 write_video_frame(std::ofstream * stream, NvBuffer &buffer)
 {

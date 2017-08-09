@@ -258,7 +258,16 @@ NvBuffer::allocateMemory()
 
         if(ext_buffer != NULL)
         {
-            planes[j].data = ext_buffer + offset;
+            //image is provided on ext_buffer continuesly
+            planes[j].length = planes[j].fmt.sizeimage;
+
+            if(j==0)
+                planes[j].data = ext_buffer;
+            else
+            {
+                //pointer to plane data is right after prev plain endings
+                planes[j].data = planes[j - 1].data + planes[j - 1].fmt.sizeimage;
+            }
         }
         else
         {
@@ -305,7 +314,12 @@ NvBuffer::deallocateMemory()
                     " not allocated");
             continue;
         }
-        delete[] planes[j].data;
+
+        //don't free external buffers
+        if(ext_buffer == NULL)
+        {
+            delete[] planes[j].data;
+        }
         planes[j].data = NULL;
     }
     allocated = false;

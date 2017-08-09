@@ -48,6 +48,7 @@ typedef struct
 
     bool got_error;
     bool use_fd;
+    bool use_ext_buffer;
 
     uint32_t crop_left;
     uint32_t crop_top;

@@ -92,6 +92,7 @@ set_defaults(context_t * ctx)
     memset(ctx, 0, sizeof(context_t));
     ctx->use_fd = true;
     ctx->in_pixfmt = V4L2_PIX_FMT_YUV420M;
+    ctx->use_ext_buffer = false;
 }
 
 int main(int argc, char *argv[])
@@ -117,26 +118,44 @@ int main(int argc, char *argv[])
     ctx.jpegenc->setCropRect(ctx.crop_left, ctx.crop_top,
             ctx.crop_width, ctx.crop_height);
 
+
     if (!ctx.use_fd)
     {
         unsigned long out_buf_size = ctx.in_width * ctx.in_height * 3 / 2;
         unsigned char *out_buf = new unsigned char[out_buf_size];
+        NvBuffer* buffer;
+        char *ext_buff = NULL;
+        uint32_t ext_buf_size = out_buf_size;
 
-        NvBuffer buffer(V4L2_PIX_FMT_YUV420M, ctx.in_width,
-                ctx.in_height, 0);
+        if(ctx.use_ext_buffer)
+        {
+            ext_buff = new char[out_buf_size];
+            buffer = new  NvBuffer(V4L2_PIX_FMT_YUV420M, ctx.in_width,
+                            ctx.in_height, 0, (unsigned char*)ext_buff, ext_buf_size);
+        }
+        else
+        {
+            buffer = new NvBuffer (V4L2_PIX_FMT_YUV420M, ctx.in_width,
+                            ctx.in_height, 0);
+        }
 
-        buffer.allocateMemory();
+        buffer->allocateMemory();
 
-        ret = read_video_frame(ctx.in_file, buffer);
+        ret = read_video_frame(ctx.in_file, *buffer);
+
         TEST_ERROR(ret < 0, "Could not read a complete frame from file",
                 cleanup);
 
-        ret = ctx.jpegenc->encodeFromBuffer(buffer, JCS_YCbCr, &out_buf,
+        ret = ctx.jpegenc->encodeFromBuffer(*buffer, JCS_YCbCr, &out_buf,
                 out_buf_size);
         TEST_ERROR(ret < 0, "Error while encoding from buffer", cleanup);
 
         ctx.out_file->write((char *) out_buf, out_buf_size);
         delete[] out_buf;
+        delete buffer;
+
+        if(ext_buff != NULL)
+            delete ext_buff;
 
         goto cleanup;
     }

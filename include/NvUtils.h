@@ -73,6 +73,9 @@ int read_video_frame(std::ifstream * stream, NvBuffer & buffer);
  * @param[in] buffer A reference to the buffer object from which the data are written.
  * @return 0 for success, -1 otherwise.
  */
+
+int read_file(std::ifstream *stream, char *buffer, uint32_t buffer_len);
+
 int write_video_frame(std::ofstream * stream, NvBuffer & buffer);
 /** @} */
 #endif

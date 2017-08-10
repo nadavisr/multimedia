@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
         delete buffer;
 
         if(ext_buff != NULL)
-            delete ext_buff;
+            delete[] ext_buff;
 
         goto cleanup;
     }

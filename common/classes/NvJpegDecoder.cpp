@@ -194,8 +194,29 @@ NvJPEGDecoder::decodeToBuffer(NvBuffer ** buffer, unsigned char * in_buf,
         }
     }
 
-    out_buf = new NvBuffer(pixel_format, cinfo.image_width,
-            cinfo.image_height, 0);
+    if(ext_buffer != NULL)
+    {
+        out_buf = new NvBuffer(pixel_format, cinfo.image_width,
+                               cinfo.image_height, 0, ext_buffer, ext_buff_size);
+
+        uint32_t req_size = 0;
+        for (int i = 0; i < out_buf->n_planes; i++)
+        {
+            NvBuffer::NvBufferPlane &plane = out_buf->planes[i];
+            req_size += plane.fmt.stride * plane.fmt.height;
+        }
+        if(ext_buff_size < req_size)
+        {
+            COMP_ERROR_MSG("Not decoding because ext_buff_size " << ext_buff_size << "is less then req_size " << req_size);
+            return -1;
+        }
+    }
+    else
+    {
+        out_buf = new NvBuffer(pixel_format, cinfo.image_width,
+                               cinfo.image_height, 0);
+    }
+
     out_buf->allocateMemory();
 
     jpeg_start_decompress (&cinfo);

@@ -49,6 +49,9 @@ typedef struct
 
     bool got_error;
     bool use_fd;
+    bool use_ext_buffer;
+    unsigned char* ext_buffer;
+    uint32_t ext_buff_len;
 } context_t;
 
 int parse_csv_args(context_t * ctx, int argc, char *argv[]);

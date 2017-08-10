@@ -278,6 +278,7 @@ NvBuffer::allocateMemory()
 
             planes[j].data = new unsigned char[planes[j].length];
         }
+        planes[j].bytesused = planes[j].length;
 
         if (planes[j].data == MAP_FAILED)
         {

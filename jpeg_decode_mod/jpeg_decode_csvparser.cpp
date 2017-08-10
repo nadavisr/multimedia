@@ -113,6 +113,10 @@ parse_csv_args(context_t * ctx, int argc, char *argv[])
         {
             ctx->use_fd = false;
         }
+        else if (!strcmp(arg, "--ext_buffer"))
+        {
+            ctx->use_ext_buffer = true;
+        }
         else if (!strcmp(arg, "-h") || !strcmp(arg, "--help"))
         {
             print_help();

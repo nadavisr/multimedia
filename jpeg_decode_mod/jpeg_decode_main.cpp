@@ -84,6 +84,7 @@ set_defaults(context_t * ctx)
 {
     memset(ctx, 0, sizeof(context_t));
     ctx->use_fd = true;
+    ctx->use_ext_buffer = false;
 }
 
 int
@@ -116,11 +117,28 @@ main(int argc, char *argv[])
     if (!ctx.use_fd)
     {
         NvBuffer *buffer;
-        ret = ctx.jpegdec->decodeToBuffer(&buffer, ctx.in_buffer,
-                  ctx.in_file_size, &pixfmt, &width, &height);
-        TEST_ERROR(ret < 0, "Could not decode image", cleanup);
-        cout << "Image Resolution - " << width << " x " << height << endl;
-        write_video_frame(ctx.out_file, *buffer);
+        if(ctx.use_ext_buffer)
+        {
+            //should be enough for this demo
+            ctx.ext_buff_len = 10000000;
+            ctx.ext_buffer = new unsigned char[ctx.ext_buff_len];
+
+            ret = ctx.jpegdec->decodeToBuffer(&buffer, ctx.in_buffer,
+                                              ctx.in_file_size, &pixfmt, &width, &height, ctx.ext_buffer, ctx.ext_buff_len);
+            TEST_ERROR(ret < 0, "Could not decode image", cleanup);
+            cout << "Image Resolution - " << width << " x " << height << endl;
+
+            //assume YUV420
+            ctx.out_file->write((char *) ctx.ext_buffer, width*height*3/2);
+        }
+        else
+        {
+            ret = ctx.jpegdec->decodeToBuffer(&buffer, ctx.in_buffer,
+                                              ctx.in_file_size, &pixfmt, &width, &height);
+            TEST_ERROR(ret < 0, "Could not decode image", cleanup);
+            cout << "Image Resolution - " << width << " x " << height << endl;
+            write_video_frame(ctx.out_file, *buffer);
+        }
         delete buffer;
         goto cleanup;
     }
@@ -241,6 +259,9 @@ cleanup:
     delete ctx.conv;
     delete ctx.jpegdec;
     delete[] ctx.in_buffer;
+
+    if(ctx.ext_buffer != NULL)
+        delete[] ctx.ext_buffer;
 
     free(ctx.in_file_path);
     free(ctx.out_file_path);

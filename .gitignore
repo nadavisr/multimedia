@@ -3,3 +3,6 @@
 */cmake-build-debug/*
 Makefile
 *.raw
+*.jpg
+jpeg_encode_mod
+jpeg_decode_mod

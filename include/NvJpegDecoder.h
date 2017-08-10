@@ -145,7 +145,7 @@ public:
      */
     int decodeToBuffer(NvBuffer ** buffer,
                          unsigned char *in_buf, unsigned long in_buf_size,
-                         uint32_t *pixfmt, uint32_t *width, uint32_t *height);
+                         uint32_t *pixfmt, uint32_t *width, uint32_t *height, unsigned char* ext_buffer=NULL , uint32_t ext_buff_size =0);
 
 private:
 

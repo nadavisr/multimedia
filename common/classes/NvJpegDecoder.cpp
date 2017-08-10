@@ -135,7 +135,7 @@ NvJPEGDecoder::decodeToFd(int &fd, unsigned char * in_buf,
 int
 NvJPEGDecoder::decodeToBuffer(NvBuffer ** buffer, unsigned char * in_buf,
         unsigned long in_buf_size, uint32_t *pixfmt, uint32_t * width,
-        uint32_t * height)
+        uint32_t * height, unsigned char* ext_buffer, uint32_t ext_buff_size )
 {
     unsigned char **line[3];
     unsigned char *y[4 * DCTSIZE] = { NULL, };

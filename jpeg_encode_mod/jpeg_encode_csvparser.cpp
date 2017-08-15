@@ -124,6 +124,12 @@ int parse_csv_args(context_t * ctx, int argc, char *argv[])
         {
             ctx->use_ext_buffer = true;
         }
+        else if (!strcmp(arg, "-header"))
+        {
+            argp++;
+            CHECK_OPTION_VALUE(argp);
+            ctx->in_file_header = atoi(*argp);
+        }
         else if (!strcmp(arg, "-f"))
         {
             argp++;

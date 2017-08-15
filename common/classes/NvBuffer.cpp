@@ -64,7 +64,7 @@ NvBuffer::NvBuffer(enum v4l2_buf_type buf_type, enum v4l2_memory memory_type,
 }
 
 NvBuffer::NvBuffer(uint32_t pixfmt, uint32_t width, uint32_t height,
-        uint32_t index, unsigned char* ext_buffer, uint32_t ext_buff_len)
+        uint32_t index, unsigned char* ext_buffer, uint32_t ext_buff_len, uint32_t ext_buf_pixfmt)
         :buf_type(V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE),
          memory_type(V4L2_MEMORY_USERPTR),
          index(index)
@@ -77,6 +77,7 @@ NvBuffer::NvBuffer(uint32_t pixfmt, uint32_t width, uint32_t height,
     allocated = false;
     this->ext_buffer = ext_buffer;
     this->ext_buffer_len = ext_buff_len;
+    this->ext_buf_pixfmt = ext_buf_pixfmt;
 
     fill_buffer_plane_format(&n_planes, fmt, width, height, pixfmt);
 
@@ -290,6 +291,31 @@ NvBuffer::allocateMemory()
         {
             DEBUG_MSG("Buffer " << index << ", Plane " << j <<
                     " allocated to " << (void *) planes[j].data);
+        }
+    }
+
+    if(ext_buffer != NULL)
+    {
+        switch (ext_buf_pixfmt)
+        {
+            case V4L2_PIX_FMT_YVU420M:
+            {
+                if(n_planes != 3)
+                    return -1;
+
+                //switch between U,V planes
+                unsigned char* tmp = planes[2].data;
+                planes[2].data = planes[1].data;
+                planes[1].data = tmp;
+                break;
+            }
+            case V4L2_PIX_FMT_YUV420M:
+            case V4L2_PIX_FMT_GREY:
+                //do nothing
+                break;
+            default:
+                SYS_ERROR_MSG("external buffer with pixel format " << ext_buf_pixfmt << " Not supported! ");
+                return -1;
         }
     }
     allocated = true;

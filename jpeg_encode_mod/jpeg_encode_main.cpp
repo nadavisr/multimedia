@@ -121,8 +121,10 @@ int main(int argc, char *argv[])
 
     if (!ctx.use_fd)
     {
+
         unsigned long out_buf_size = ctx.in_width * ctx.in_height * 3 / 2;
         unsigned char *out_buf = new unsigned char[out_buf_size];
+
         NvBuffer* buffer;
         char *ext_buff = NULL;
         uint32_t ext_buf_size = out_buf_size;
@@ -131,17 +133,21 @@ int main(int argc, char *argv[])
         {
             ext_buff = new char[out_buf_size];
             buffer = new  NvBuffer(V4L2_PIX_FMT_YUV420M, ctx.in_width,
-                            ctx.in_height, 0, (unsigned char*)ext_buff, ext_buf_size);
+                            ctx.in_height, 0, (unsigned char*)ext_buff, ext_buf_size, V4L2_PIX_FMT_YVU420M);
+
+            buffer->allocateMemory();
+
+            ctx.in_file->seekg(ctx.in_file_header, std::ifstream::beg);
+            ctx.in_file->read(ext_buff, ext_buf_size);
         }
         else
         {
             buffer = new NvBuffer (V4L2_PIX_FMT_YUV420M, ctx.in_width,
                             ctx.in_height, 0);
+            buffer->allocateMemory();
+
+            ret = read_video_frame(ctx.in_file, *buffer);
         }
-
-        buffer->allocateMemory();
-
-        ret = read_video_frame(ctx.in_file, *buffer);
 
         TEST_ERROR(ret < 0, "Could not read a complete frame from file",
                 cleanup);

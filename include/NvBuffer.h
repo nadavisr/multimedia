@@ -154,7 +154,7 @@ public:
      * @param[in] height Height of the buffer in pixels.
      * @param[in] index Index/ID of the buffer.
      */
-    NvBuffer(uint32_t pixfmt, uint32_t width, uint32_t height, uint32_t index, unsigned char* ext_buff = NULL, uint32_t ext_buff_len =0);
+    NvBuffer(uint32_t pixfmt, uint32_t width, uint32_t height, uint32_t index, unsigned char* ext_buff = NULL, uint32_t ext_buff_len =0, uint32_t ext_buf_pixfmt=0);
 
     /**
      * Creates a new NvBuffer object for non-raw pixel formats.
@@ -279,6 +279,8 @@ private:
                                 sent when this buffer was queued. */
     unsigned char* ext_buffer;       /*external allocated buffer is used (no malloc)*/
     int ext_buffer_len;     /*external buffer length*/
+
+    uint32_t ext_buf_pixfmt;    /*external buffer format*/
 
     /**
      * Disallows copy constructor.

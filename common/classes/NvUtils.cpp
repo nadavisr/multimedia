@@ -30,6 +30,7 @@
 #include "NvBuffer.h"
 #include "NvLogging.h"
 #include <fstream>
+#include <NvBuffer.h>
 
 int
 read_video_frame(std::ifstream * stream, NvBuffer & buffer)
@@ -40,6 +41,7 @@ read_video_frame(std::ifstream * stream, NvBuffer & buffer)
     for (i = 0; i < buffer.n_planes; i++)
     {
         NvBuffer::NvBufferPlane &plane = buffer.planes[i];
+
         std::streamsize bytes_to_read =
             plane.fmt.bytesperpixel * plane.fmt.width;
         data = (char *) plane.data;

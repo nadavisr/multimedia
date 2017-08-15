@@ -142,7 +142,7 @@ public:
      * @return 0 for success, -1 otherwise.
      */
     int encodeFromBuffer(NvBuffer & buffer, J_COLOR_SPACE color_space,
-                         unsigned char **out_buf, unsigned long &out_buf_size);
+                         unsigned char **out_buf, unsigned long &out_buf_size, int32_t quality=75);
 
     /**
      * Sets the cropping rectangle used by the JPEG encoder. This method

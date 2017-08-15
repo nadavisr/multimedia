@@ -50,6 +50,7 @@ typedef struct
     bool use_fd;
     bool use_ext_buffer;
     uint32_t in_file_header;
+    int32_t quality;
 
     uint32_t crop_left;
     uint32_t crop_top;

@@ -49,6 +49,7 @@ using namespace std;
 static void
 print_help(void)
 {
+    //-ext_buffer -header 32 -quality 85
     cerr <<
         "\njpeg-encode <in-file> <in-width> <in-height> <out-file> [OPTIONS]\n\n"
         "OPTIONS:\n"
@@ -56,6 +57,9 @@ print_help(void)
         "\t--dbg-level <level>  Sets the debug level [Values 0-3]\n\n"
         "\t--encode-fd          Uses FD as input to encoder [DEFAULT]\n"
         "\t--encode-buffer      Uses buffer as input to encoder\n\n"
+        "\t--ext_buffer        Uses externaly allocated buffer as input to encoder (not allocated internally)\n\n"
+        "\t-header <size>      file header size to skip\n\n"
+        "\t-quality <qual>     encoding quality\n\n"
         "\t-f <pixfmt>          Color format of input to encoder (works only for --encode-fd) [1=YUV420(Default), 2=NV12]\n\n"
         "\t-crop <left> <top> <width> <height>  Cropping rectangle for JPEG encoder\n\n";
 }
@@ -129,6 +133,12 @@ int parse_csv_args(context_t * ctx, int argc, char *argv[])
             argp++;
             CHECK_OPTION_VALUE(argp);
             ctx->in_file_header = atoi(*argp);
+        }
+        else if (!strcmp(arg, "-quality"))
+        {
+            argp++;
+            CHECK_OPTION_VALUE(argp);
+            ctx->quality = atoi(*argp);
         }
         else if (!strcmp(arg, "-f"))
         {

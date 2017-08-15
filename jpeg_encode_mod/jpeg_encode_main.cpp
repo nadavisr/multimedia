@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
                 cleanup);
 
         ret = ctx.jpegenc->encodeFromBuffer(*buffer, JCS_YCbCr, &out_buf,
-                out_buf_size);
+                out_buf_size, ctx.quality);
         TEST_ERROR(ret < 0, "Error while encoding from buffer", cleanup);
 
         ctx.out_file->write((char *) out_buf, out_buf_size);

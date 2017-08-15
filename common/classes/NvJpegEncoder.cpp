@@ -120,7 +120,7 @@ NvJPEGEncoder::encodeFromFd(int fd, J_COLOR_SPACE color_space,
 
 int
 NvJPEGEncoder::encodeFromBuffer(NvBuffer & buffer, J_COLOR_SPACE color_space,
-        unsigned char **out_buf, unsigned long &out_buf_size)
+        unsigned char **out_buf, unsigned long &out_buf_size, int32_t quality)
 {
     unsigned char **line[3];
 
@@ -220,6 +220,13 @@ NvJPEGEncoder::encodeFromBuffer(NvBuffer & buffer, J_COLOR_SPACE color_space,
         default:
             COMP_ERROR_MSG("Color format " << color_space << " not supported\n");
             return -1;
+    }
+
+    if(quality >= 1 && quality <=100) {
+        jpeg_set_quality(&cinfo, quality, FALSE);
+    }
+    else{
+        COMP_ERROR_MSG ("ignoring illegal quality " << quality << " for jpeg_set_quality");
     }
 
     for (i = 0; i < channels; i++)

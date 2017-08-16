@@ -1,3 +1,4 @@
+#include <NvJpegDecoder.h>
 #include "jpegUtils.h"
 
 void* createEncoder()
@@ -68,12 +69,66 @@ int jpeg_encode(void* encoder, unsigned char* src, uint32_t width, uint32_t heig
     }
 
     JPG_CHECK_OK(ret, "Error while encoding from buffer", -1);
+
+    return JPG_OK;
 }
 
-void* createDecoder();
+void* createDecoder()
+{
+    cout << "createDecoder called" << endl;
 
-void destroyDecoder(void* decoder);
+    NvJPEGDecoder* jpegdec = NvJPEGDecoder::createJPEGDecoder("jpegdec");
+    return jpegdec;
+}
+
+void destroyDecoder(void* decoder)
+{
+    cout << "destroyEncoder called" << endl;
+    NvJPEGDecoder* dec = reinterpret_cast<NvJPEGDecoder*>(decoder);
+
+    if(dec == nullptr)
+    {
+        cout << "decoder is null" << endl;
+        return;
+    }
+    delete dec;
+}
 
 //decode jpeg image to yuv420p raw image
 int jpeg_decode(void* decoder, unsigned char* src, uint32_t jpg_size, unsigned char* dst, uint32_t dst_buf_size,
-                uint32_t& width, uint32_t& height, uint32_t& pix_fmt);
+                uint32_t& width, uint32_t& height, uint32_t& pix_fmt)
+{
+    NvJPEGDecoder* dec = reinterpret_cast<NvJPEGDecoder*>(decoder);
+    JPG_CHECK_NULL_PTR(dec, "decoder is null", -1);
+
+    //create temp NvBuffer that uses src buffer
+    NvBuffer* nvBuffer = nullptr;
+    uint32_t pix_fmt_int;
+
+    int ret = dec->decodeToBuffer(&nvBuffer, src, jpg_size, &pix_fmt_int, &width, &height, dst, dst_buf_size);
+
+    if(nvBuffer != nullptr)
+    {
+        //needed only during decoding. we use external buffer
+        delete nvBuffer;
+    }
+
+    JPG_CHECK_OK(ret, "Could not decode image", -1);
+
+    switch (pix_fmt_int){
+        case V4L2_PIX_FMT_YUV420M:
+            pix_fmt = PIX_FMT_YUV420p;
+            break;
+        case V4L2_PIX_FMT_YVU420M:
+            pix_fmt = PIX_FMT_YVU420p;
+            break;
+        default:
+            cout << "unknown pix_fmt " << pix_fmt_int << endl;
+            pix_fmt = 0;
+            break;
+    }
+
+    cout << "decoded Image Resolution - " << width << " x " << height << " pix_fmt " << pix_fmt << endl;
+
+    return JPG_OK;
+}

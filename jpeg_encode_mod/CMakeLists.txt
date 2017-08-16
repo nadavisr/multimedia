@@ -31,5 +31,6 @@ link_directories(${LIB_DIR})
 
 add_executable(jpeg_encode_mod ${SOURCE_FILES} ${COMMON_FILES})
 
-#target_link_libraries(05_jpeg_encode pthread v4l2 EGL GLESv2 X11 /usr/lib/aarch64-linux-gnu/tegra/libnvbuf_utils.so /usr/lib/aarch64-linux-gnu/tegra/libnvjpeg.so /usr/lib/aarch64-linux-gnu/tegra/libnvosd.so drm )
+#target_link_libraries(jpeg_encode_mod  pthread v4l2 EGL GLESv2 X11 nvbuf_utils nvjpeg nvosd drm)
+
 target_link_libraries(jpeg_encode_mod  pthread v4l2 EGL GLESv2 X11 nvbuf_utils nvjpeg nvosd drm)

@@ -64,12 +64,12 @@ JPEG_UTILS_API void destroyEncoder(void *encoder);
 JPEG_UTILS_API void destroyDecoder(void *decoder);
 
 //encode yuv420p raw image to jpeg
-JPEG_UTILS_API int jpeg_encode(void *encoder, unsigned char *src, uint32_t width, uint32_t height, uint32_t , uint32_t src_buf_size,
-                                unsigned char *dst_buf, unsigned long dst_buf_size, int32_t quality, uint32_t &jpeg_size);
+JPEG_UTILS_API int jpeg_encode(void *encoder, unsigned char *src, uint32_t width, uint32_t height, uint32_t pix_fmt, uint32_t src_buf_size,
+                                unsigned char *dst_buf, unsigned long dst_buf_size, int32_t quality, unsigned long &jpeg_size);
 
 //decode jpeg image to yuv420p raw image
-JPEG_UTILS_API int jpeg_decode(void *decoder, unsigned char *src, uint32_t jpg_size, unsigned char *dst, uint32_t dst_buf_size,
-                                uint32_t &width, uint32_t &height, uint32_t &pix_fmt);
+JPEG_UTILS_API int jpeg_decode(void *decoder, unsigned char *src, uint32_t jpg_size, unsigned char *dst, uint32_t dst_buf_size, uint32_t dst_buf_pixfmt,
+                                uint32_t &width, uint32_t &height);
 
 #ifdef __cplusplus
 }

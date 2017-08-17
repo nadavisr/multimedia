@@ -124,7 +124,7 @@ main(int argc, char *argv[])
             ctx.ext_buffer = new unsigned char[ctx.ext_buff_len];
 
             ret = ctx.jpegdec->decodeToBuffer(&buffer, ctx.in_buffer,
-                                              ctx.in_file_size, &pixfmt, &width, &height, ctx.ext_buffer, ctx.ext_buff_len);
+                                              ctx.in_file_size, &pixfmt, &width, &height, ctx.ext_buffer, ctx.ext_buff_len, V4L2_PIX_FMT_YVU420M);
             TEST_ERROR(ret < 0, "Could not decode image", cleanup);
             cout << "Image Resolution - " << width << " x " << height << endl;
 

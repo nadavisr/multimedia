@@ -135,7 +135,7 @@ NvJPEGDecoder::decodeToFd(int &fd, unsigned char * in_buf,
 int
 NvJPEGDecoder::decodeToBuffer(NvBuffer ** buffer, unsigned char * in_buf,
         unsigned long in_buf_size, uint32_t *pixfmt, uint32_t * width,
-        uint32_t * height, unsigned char* ext_buffer, uint32_t ext_buff_size )
+        uint32_t * height, unsigned char* ext_buffer, uint32_t ext_buff_size, uint32_t ext_buf_pixfmt )
 {
     unsigned char **line[3];
     unsigned char *y[4 * DCTSIZE] = { NULL, };
@@ -197,7 +197,7 @@ NvJPEGDecoder::decodeToBuffer(NvBuffer ** buffer, unsigned char * in_buf,
     if(ext_buffer != NULL)
     {
         out_buf = new NvBuffer(pixel_format, cinfo.image_width,
-                               cinfo.image_height, 0, ext_buffer, ext_buff_size);
+                               cinfo.image_height, 0, ext_buffer, ext_buff_size, ext_buf_pixfmt);
 
         uint32_t req_size = 0;
         for (int i = 0; i < out_buf->n_planes; i++)

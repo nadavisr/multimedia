@@ -17,6 +17,8 @@ include_directories(${INCLUDE_DIR} )
 
 link_directories(${LIB_DIR})
 
+add_definitions(-DJPEG_UTILS_EXPORTS)
+
 add_library(jpeg_utils SHARED ${SOURCE_FILES} ${COMMON_FILES})
 
 target_link_libraries(jpeg_utils pthread v4l2 EGL GLESv2 X11 nvbuf_utils nvjpeg nvosd drm)

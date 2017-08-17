@@ -6,3 +6,5 @@ Makefile
 *.jpg
 jpeg_encode_mod
 jpeg_decode_mod
+jpeg_tester/jpeg_tester
+

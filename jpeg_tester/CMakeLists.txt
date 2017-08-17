@@ -29,6 +29,6 @@ link_directories(${LIB_DIR})
 
 add_executable(jpeg_tester ${SOURCE_FILES} ${COMMON_FILES} )
 
-#target_link_libraries(jpeg_encode_mod  pthread v4l2 EGL GLESv2 X11 nvbuf_utils nvjpeg nvosd drm)
+#target_link_libraries(jpeg_tester ${ROOT_PATH}/git/multimedia/jpeg_utils/cmake-build-debug/libjpeg_utils.so pthread v4l2 EGL GLESv2 X11 nvbuf_utils nvjpeg nvosd drm)
 
-target_link_libraries(jpeg_tester ${ROOT_PATH}/git/multimedia/jpeg_utils/cmake-build-debug/libjpeg_utils.so pthread v4l2 EGL GLESv2 X11 nvbuf_utils nvjpeg nvosd drm)
+target_link_libraries(jpeg_tester ${ROOT_PATH}/git/multimedia/jpeg_utils/cmake-build-debug/libjpeg_utils.so)

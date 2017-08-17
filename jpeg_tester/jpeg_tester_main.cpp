@@ -76,9 +76,4 @@ int main(int argc, char *argv[]) {
     encoded_file->write((char*)out_buf, jpeg_size);
     encoded_file->close();
 
-
-
-    //TODO: comp_name of decoder/encoder
-
-
 }

@@ -26,6 +26,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*
+ * Modified by Nadav Israeli
+ * Add support for externally allocated buffer usage instead of internal buffer allocations
+ * Support V4L2_PIX_FMT_YVU420M pixel format in external buffer with mapping to NvBuffer planes
+ *
+ * */
+
 #include "NvJpegEncoder.h"
 #include "NvLogging.h"
 #include <string.h>

@@ -1,6 +1,12 @@
-//
-// Created by ubuntu on 8/17/17.
-//
+/*
+ * Created by Nadav Israeli
+ *
+ * tester of libjpeg_utils.so
+ * provides Jpeg Encoding / Decoding
+ * uses Nvidia's Tegra's hardware acceleration thru libjpeg API
+ * may be used with other implementation of libjpeg (windows/linux386) (not checked yet)
+ *
+ * */
 
 #include "jpeg_tester_main.h"
 

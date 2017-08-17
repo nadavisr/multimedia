@@ -1,3 +1,13 @@
+/*
+ * Created by Nadav Israeli
+ *
+ * part of libjpeg_utils.so *
+ * provides Jpeg Encoding / Decoding
+ * uses Nvidia's Tegra's hardware acceleration thru libjpeg API
+ * may be used with other implementation of libjpeg (windows/linux386) (not checked yet)
+ *
+ * */
+
 #pragma once
 
 

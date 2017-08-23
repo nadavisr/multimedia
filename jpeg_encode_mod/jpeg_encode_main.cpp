@@ -126,6 +126,8 @@ int main(int argc, char *argv[])
     ctx.jpegenc->setCropRect(ctx.crop_left, ctx.crop_top,
             ctx.crop_width, ctx.crop_height);
 
+    ctx.jpegenc->enableProfiling();
+
 
     if (!ctx.use_fd)
     {
@@ -160,9 +162,13 @@ int main(int argc, char *argv[])
         TEST_ERROR(ret < 0, "Could not read a complete frame from file",
                 cleanup);
 
-        ret = ctx.jpegenc->encodeFromBuffer(*buffer, JCS_YCbCr, &out_buf,
-                out_buf_size, ctx.quality);
+        ret = ctx.jpegenc->encodeFromBuffer(*buffer, JCS_YCbCr, &out_buf, out_buf_size, ctx.quality);
+
         TEST_ERROR(ret < 0, "Error while encoding from buffer", cleanup);
+
+
+        if(ctx.jpegenc->isProfilingEnabled())
+            ctx.jpegenc->printProfilingStats();
 
         ctx.out_file->write((char *) out_buf, out_buf_size);
         delete[] out_buf;

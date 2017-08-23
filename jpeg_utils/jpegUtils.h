@@ -65,13 +65,17 @@ enum {
     PIX_FMT_YVU420p = 2    //Y,V,U order
 };
 
-JPEG_UTILS_API void *createEncoder();
+JPEG_UTILS_API void *createEncoder(int32_t enable_profiling=0);
 
-JPEG_UTILS_API void *createDecoder();
+JPEG_UTILS_API void *createDecoder(int32_t enable_profiling=0);
 
 JPEG_UTILS_API void destroyEncoder(void *encoder);
 
 JPEG_UTILS_API void destroyDecoder(void *decoder);
+
+JPEG_UTILS_API void printEncoderProfiling(void* encoder);
+
+JPEG_UTILS_API void printDecoderProfiling(void* decoder);
 
 //encode yuv420p raw image to jpeg
 JPEG_UTILS_API int jpeg_encode(void *encoder, unsigned char *src, uint32_t width, uint32_t height, uint32_t pix_fmt, uint32_t src_buf_size,

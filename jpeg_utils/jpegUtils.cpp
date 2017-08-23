@@ -11,7 +11,7 @@
 #include <NvJpegDecoder.h>
 #include "jpegUtils.h"
 
-void* createEncoder()
+void* createEncoder(int32_t enable_profiling)
 {
     cout << "createEncoder called" << endl;
 
@@ -20,6 +20,9 @@ void* createEncoder()
     if(jpegenc != NULL)
     {
         jpegenc->setCropRect(0, 0, 0, 0 );
+
+        if(enable_profiling)
+            jpegenc->enableProfiling();
     }
     return jpegenc;
 }
@@ -83,11 +86,24 @@ int jpeg_encode(void* encoder, unsigned char* src, uint32_t width, uint32_t heig
     return JPG_OK;
 }
 
-void* createDecoder()
+JPEG_UTILS_API void printEncoderProfiling(void* encoder)
+{
+    NvJPEGEncoder* enc = reinterpret_cast<NvJPEGEncoder*>(encoder);
+    JPG_CHECK_NULL_PTR(enc, "encoder is null", );
+
+    if(enc->isProfilingEnabled())
+        enc->printProfilingStats();
+}
+
+void* createDecoder(int32_t enable_profiling)
 {
     cout << "createDecoder called" << endl;
 
     NvJPEGDecoder* jpegdec = NvJPEGDecoder::createJPEGDecoder("jpegdec");
+
+    if(jpegdec != nullptr && enable_profiling)
+        jpegdec->enableProfiling();
+
     return jpegdec;
 }
 
@@ -146,4 +162,13 @@ int jpeg_decode(void* decoder, unsigned char* src, uint32_t jpg_size, unsigned c
     cout << "decoded Image Resolution - " << width << " x " << height << " v4l2_pix_fmt " << out_pix_fmt << endl;
 
     return JPG_OK;
+}
+
+JPEG_UTILS_API void printDecoderProfiling(void* decoder)
+{
+    NvJPEGDecoder* dec = reinterpret_cast<NvJPEGDecoder*>(decoder);
+    JPG_CHECK_NULL_PTR(dec, "decoder is null", );
+
+    if(dec->isProfilingEnabled())
+        dec->printProfilingStats();
 }

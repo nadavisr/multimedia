@@ -39,8 +39,9 @@ int main(int argc, char *argv[]) {
     jpeg_file->read((char*)in_buf, jpeg_size);
     jpeg_file->close();
 
-    void* decoder = createDecoder();
+    void* decoder = createDecoder(1);
     int res = jpeg_decode(decoder, in_buf, jpeg_size, out_buf, buf_size, requested_pix_fmt, w, h);
+    printDecoderProfiling(decoder);
     destroyDecoder(decoder);
 
     if(res < 0)
@@ -64,7 +65,7 @@ int main(int argc, char *argv[]) {
         cout << "file vis3_decoded.raw not found!" << endl;
         return -1;
     }
-    void* encoder = createEncoder();
+    void* encoder = createEncoder(1);
 
     //decoded_file->seekg(32, std::fstream::beg); //needed only for recorded file with header
     decoded_file->read((char*)in_buf, buf_size);
@@ -72,6 +73,7 @@ int main(int argc, char *argv[]) {
 
     //when buffer comes from augmentor it will have header and format is PIX_FMT_YVU420p instead!!
     res = jpeg_encode(encoder,in_buf, w, h, PIX_FMT_YVU420p, buf_size, out_buf, buf_size, 85, jpeg_size );
+    printEncoderProfiling(encoder);
     destroyEncoder(encoder);
     if(res < 0)
     {
